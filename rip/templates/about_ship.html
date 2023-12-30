@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+	{% load static %}
+	<meta charset="utf-8">
+    <title>RIP_LAB</title>
+    <link rel="stylesheet" type="text/css" href="{% static 's.css' %}">
+</head>
+
+<body>
+	<div class='bkg'>
+		<img src = 'https://celebrity.land/pt/wp-content/uploads/2022/11/A-primeira-fragata-Type-26-da-Royal-Navy-e-lancada.JPG' id = 'bkg_img' width="1500" height="500">
+		<div class="bkg_image_text">Кораблестроительная программа "АРГОН" </div>
+	</div>
+
+
+	<img src ="{{boat.url_photo}}" width="400" height="240">
+	<table class = 'styled-table'>
+		<thead>
+			<th>Параметр</th> <th>Значение</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td> Название</td>
+				<td> {{boat.name}}</td>
+			</tr>
+			<tr>
+				<td> Тип </td>
+				<td> {{boat.type}}</td>
+			</tr>
+			<tr>
+				<td> Ранг</td>
+				<td> {{boat.rang}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<form action="/ships" method='get'>
+		<button class="button_more">Назад</button>
+	</form>
+</body>

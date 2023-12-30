@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+	{% load static %}
+	<meta charset="utf-8">
+    <title>RIP_LAB</title>
+    <link rel="stylesheet" type="text/css" href="{% static 's.css' %}">
+</head>
+
+<body>
+	<div class='bkg'>
+		<img src = 'https://celebrity.land/pt/wp-content/uploads/2022/11/A-primeira-fragata-Type-26-da-Royal-Navy-e-lancada.JPG' id = 'bkg_img' width="1500" height="500">
+		<div class="bkg_image_text">Кораблестроительная программа "АРГОН" </div>
+	</div>
+	<form action="/ships/" method= "get" enctype="multipart/form-data">
+		<input type="text" name="filter" id = 'filter_field' placeholder="Название корабля">
+    	<br>
+	    <div class = 'checkbox_inline'><input type="checkbox" name="rang_1" value="check-1" id="check-1">
+	      <label for="check-1">Ранг 1</label></div>
+	    <div class = 'checkbox_inline'><input type="checkbox" name="rang_2" value="check-2" id="check-2">
+	      <label for="check-2">Ранг 2</label></div>
+	    <div class = 'checkbox_inline'><input type="checkbox" name="rang_3" value="check-3" id="check-3">
+	      <label for="check-3">Ранг 3</label></div>
+	    <div class = 'checkbox_inline'><input type="checkbox" name="rang_4" value="check-4" id="check-4">
+	      <label for="check-4">Ранг 4</label></div>
+	  </div>
+	  <br>
+  		<button type="submit">Применить фильтр</button>
+	</form>
+	<table class = 'styled-table'>
+		<thead>
+			<th>Фото</th> <th>Название</th> <th>Ранг</th> <th>Подробности</th>
+		</thead>
+		<tbody>
+			{% for boat in data %}
+			<tr>
+				<td><img src ="{{boat.url_photo}}" width="200" height="120"></td>
+				<td>{{ boat.name }}</td>
+				<td>{{ boat.rang }}</td>
+				<td><form action="/ship/{{boat.id}}" method='get'>
+					<button class="button_more">Подробнее</button>
+				</form></td>
+
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</body>
