@@ -14,7 +14,10 @@
 	</div>
 
 
-	<img src ="{{boat.url_photo}}" width="400" height="240">
+	<img src ="{{boat.photo_url}}" width="400" height="240">
+	<div>
+		{{boat.description}}
+	</div>
 	<table class = 'styled-table'>
 		<thead>
 			<th>Параметр</th> <th>Значение</th>
@@ -31,6 +34,14 @@
 			<tr>
 				<td> Ранг</td>
 				<td> {{boat.rang}}</td>
+			</tr>
+			<tr>
+				<td> Численность экипажа</td>
+				<td> {{boat.stuff}}</td>
+			</tr>
+			<tr>
+				<td> Проект</td>
+				<td> {{boat.project}}</td>
 			</tr>
 		</tbody>
 	</table>

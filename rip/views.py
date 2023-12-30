@@ -1,20 +1,7 @@
 from django.shortcuts import render
-
-
-class army_boat():
-	def __init__(self,id,url_photo,name,type,rang):
-		self.id = id
-		self.url_photo = url_photo
-		self.name = name
-		self.type = type
-		self.rang = rang
-
-col_boat = []
-col_boat.append(army_boat(1,'https://www.interfax.ru/ftproot/textphotos/2018/04/10/DDG700.jpg',"Ракетный эсминец","Эсминец",1))
-col_boat.append(army_boat(2,'https://sdelanounas.ru/i/c/g/h/f_cGhvdG90YXNzNC5jZG52aWRlby5ydS93aWR0aC8xMDIwX2I5MjYxZmExL3Rhc3MvbTIvdXBsb2Fkcy9pLzIwMTkwMzA3LzQ5Nzc3MDIuanBnP19faWQ9MTE3OTMx.jpeg',"Атомная подводная лодка", "Подводная лодка",1))
-col_boat.append(army_boat(3,'https://stat.mil.ru/images/military/gallery/2018/rgegaerg550.jpg',"Дизельная подводная лодка", "Подводная лодка",2))
-col_boat.append(army_boat(4,'https://function.mil.ru/images/upload/2019/chf1_26112021_550%281%29.JPG',"Малый артиллерийский корабль", "Артиллерийский корабль",3))	
-col_boat.append(army_boat(5,'https://v-pravda.ru/wp-content/uploads/2019/10/mak-volgodonsk.jpg',"Ракетный катер", "Катер",4))	
+from django.shortcuts import redirect
+from django.db import connection
+from .models import Ship
 
 
 def ships(request):
@@ -23,25 +10,25 @@ def ships(request):
 	rang_2 = request.GET.get('rang_2')
 	rang_3 = request.GET.get('rang_3')
 	rang_4 = request.GET.get('rang_4')
-	dict_rangs = {1:bool(rang_1),2:bool(rang_2),3:bool(rang_3),4:bool(rang_4)}
+	arr_rangs = [rang_1,rang_2,rang_3,rang_4]
+	for i in range(3,-1,-1):
+		if not arr_rangs[i]:
+			arr_rangs.pop(i)
+		else:
+			arr_rangs[i] = i+1
 	if sum((bool(search_text),bool(rang_1),bool(rang_2),bool(rang_3),bool(rang_4))) == 0:
-			return render(request,'user_all_boats.html',{'data':col_boat})
+			return render(request,'user_all_boats.html',{'data':Ship.objects.filter(status='Добавлен'),'search_name':search_text})
 	search_res = []
 	if sum((bool(rang_1),bool(rang_2),bool(rang_3),bool(rang_4))) == 0:
-		for ship in col_boat:
-			if ship.name.lower().startswith(search_text.lower()):
-				search_res.append(ship)
+		return render(request,'user_all_boats.html',{'data':Ship.objects.filter(name__startswith = search_text,status='Добавлен'),'search_name':search_text})
 	else:
-		for ship in col_boat:
-			if dict_rangs[ship.rang] and ship.name.lower().startswith(search_text.lower()):
-				search_res.append(ship)
-
-
-	return render(request,'user_all_boats.html',{'data':search_res})
-
+		return render(request,'user_all_boats.html',{'data':Ship.objects.filter(name__startswith = search_text,rang__in = arr_rangs,status='Добавлен'),'search_name':search_text})
 
 def ship(request,ship_id):
-	for ship in col_boat:
-		if ship.id == ship_id:
-			return render(request,'about_ship.html',{'boat':ship})
+	return render(request,'about_ship.html',{'boat':Ship.objects.get(ship_id=ship_id)})
+
+def delete_ship(request,ship_id):
+	with connection.cursor() as cursor:
+		cursor.execute(f"UPDATE rip_ship SET status='Удалено' WHERE ship_id = {ship_id}")
+	return redirect('http://127.0.0.1:8000/ships/')
 

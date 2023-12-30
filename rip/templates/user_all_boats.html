@@ -13,7 +13,7 @@
 		<div class="bkg_image_text">Кораблестроительная программа "АРГОН" </div>
 	</div>
 	<form action="/ships/" method= "get" enctype="multipart/form-data">
-		<input type="text" name="filter" id = 'filter_field' placeholder="Название корабля">
+		<input type="text" name="filter" id = 'filter_field' placeholder="Название корабля" value = "{{search_name}}">
     	<br>
 	    <div class = 'checkbox_inline'><input type="checkbox" name="rang_1" value="check-1" id="check-1">
 	      <label for="check-1">Ранг 1</label></div>
@@ -29,16 +29,20 @@
 	</form>
 	<table class = 'styled-table'>
 		<thead>
-			<th>Фото</th> <th>Название</th> <th>Ранг</th> <th>Подробности</th>
+			<th>Фото</th> <th>Название</th> <th>Ранг</th> <th>Подробности</th> <th>Удалить</th>
 		</thead>
 		<tbody>
 			{% for boat in data %}
 			<tr>
-				<td><img src ="{{boat.url_photo}}" width="200" height="120"></td>
+				<td><img src ="{{boat.photo_url}}" width="200" height="120"></td>
 				<td>{{ boat.name }}</td>
 				<td>{{ boat.rang }}</td>
-				<td><form action="/ship/{{boat.id}}" method='get'>
+				<td><form action="/ship/{{boat.ship_id}}" method='get'>
 					<button class="button_more">Подробнее</button>
+				</form></td>
+				<td><form action="/delete_ship/{{boat.ship_id}}/" method='post'>
+					{% csrf_token %}
+					<button class="button_more">Удалить</button>
 				</form></td>
 
 			</tr>
