@@ -3,4 +3,5 @@
 Демо-версия проекта: https://vvoifra.github.io/rip_frontend/
 #### Смежные репозитории
 Фронтенд: https://github.com/vvoIfra/rip_frontend <br>
-Нативное приложение: https://github.com/vvoIfra/rip_native
+Нативное приложение: https://github.com/vvoIfra/rip_native <br>
+Асинхронный сервис: https://github.com/vvoIfra/rip_async
