@@ -17,11 +17,18 @@ def get_user_id_mod():
 # Методы УСЛУГ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
 @api_view(['Get'])
 def get_all_classes_of_ships(request, format=None):
-    ships = Class_of_Ship.objects.all()
-    if request.GET.get('name_filter'):
-    	ships=Class_of_Ship.objects.filter(name__startswith = request.GET.get('name_filter'))
-    serializer = Class_of_Ship_Serializer(ships, many=True)
-    return Response(serializer.data)
+	ships = Class_of_Ship.objects.all()
+	if request.GET.get('name_filter'):
+		ships=Class_of_Ship.objects.filter(name__startswith = request.GET.get('name_filter'))
+	serializer = Class_of_Ship_Serializer(ships, many=True)
+	try:
+		draft_id = Order.objects.get(creator=Custom_User.objects.get(id=get_user_id()), status='Forming').order_id
+		d = dict()
+		d['data'] = serializer.data
+		d['draft_id'] = draft_id
+		return Response(d)
+	except:
+		return Response(serializer.data)
 
 @api_view(['Get'])
 def get_one_class_of_ships(request,ship_id, 	format=None):
@@ -93,8 +100,6 @@ def get_one_order(request, order_id,format = None):
 def approve_order(request,order_id, format=None):
 	order = get_object_or_404(Order, order_id=order_id)
 	user = Custom_User.objects.get(id=get_user_id_mod())
-	if order.moderator != user:
-		return Response(status=status.HTTP_403_FORBIDDEN)
 	if order.status != 'Active':
 		return Response(status=status.HTTP_412_PRECONDITION_FAILED)
 	Order.objects.filter(order_id=order_id).update(status='Finished',end_date = datetime.datetime.now())
@@ -104,8 +109,6 @@ def approve_order(request,order_id, format=None):
 def decline_order(request,order_id, format=None):
 	order = get_object_or_404(Order, order_id=order_id)
 	user = Custom_User.objects.get(id=get_user_id_mod())
-	if order.moderator != user:
-		return Response(status=status.HTTP_403_FORBIDDEN)
 	if order.status != 'Active':
 		return Response(status=status.HTTP_412_PRECONDITION_FAILED)
 	Order.objects.filter(order_id=order_id).update(status='Declined',end_date=datetime.datetime.now())
